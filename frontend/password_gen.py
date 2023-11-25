@@ -16,6 +16,8 @@ class PasswordGenerator(QFrame):
         self.generator_object = password_utility.PasswordManager()
         self.database_util = database_util
         self.user = user
+        self.generated_password = None
+
         self.setStyleSheet("QFrame{background:white;}")
         self.main_layout = QVBoxLayout()
         image_label = QLabel()
@@ -76,6 +78,11 @@ class PasswordGenerator(QFrame):
         self.save_btn.setDisabled(False)
 
     def save_btn_callback(self):
-        app = NewOrUpdatePassword(self, self.database_util, self.user, password=self.generated_password)
-        app.open()
+        if self.generated_password:
+            app = NewOrUpdatePassword(self, self.database_util, self.user, password=self.generated_password)
+            app.open()
+            self.password_label.setText("")
+            self.generated_password = None
+        else:
+            QMessageBox.information(self,"Information", "No password generated")
 
