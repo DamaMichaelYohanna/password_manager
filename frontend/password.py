@@ -222,9 +222,7 @@ class NewOrUpdatePassword(QDialog):
         elif password:
             self.password.setText(password)
             submit_btn = QPushButton("Add Login")
-            submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(True))
-
-
+            submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(False))
         else:
             submit_btn = QPushButton("Add Login")
             submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(False))
