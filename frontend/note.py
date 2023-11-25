@@ -105,7 +105,6 @@ class NoteList(QFrame):
     def refresh_btn(self):
         for i in reversed(range(1, self.note_layout.rowCount() + 1)):
             for j in reversed(range(1, self.note_layout.columnCount() + 1)):
-                print(f"i-={i} j={j}")
                 item = self.note_layout.itemAt(i)
                 if item and item.widget():
                     pass
@@ -158,7 +157,6 @@ class NoteList(QFrame):
         app.open()
 
     def delete_callback(self, pk):
-        print("called", pk)
         if QMessageBox.question(self, "Delete Note!", "Are you sure you want to delete this note?") == 16384:
             self.database_util.delete_record("Notes", pk, self.user[0])
             QMessageBox.information(self, "Deleted Successfully!", "Your name has been deleted success. Kindly refresh")
