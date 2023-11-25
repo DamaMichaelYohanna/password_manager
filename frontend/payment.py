@@ -107,10 +107,8 @@ class PaymentInfo(QFrame):
     def refresh_btn(self):
         for i in reversed(range(1, self.note_layout.rowCount() + 1)):
             for j in reversed(range(1, self.note_layout.columnCount() + 1)):
-                print(f"i-={i} j={j}")
                 item = self.note_layout.itemAt(i)
                 if item and item.widget():
-                    pass
                     item.widget().setParent(None)  # remove widget from the layout
 
         self.record = self.database_util.fetch_data("Payments", self.user[0]).fetchall()
@@ -253,7 +251,6 @@ class PaymentDetail(QDialog):
 
     def __init__(self, parent, payment_detail):
         super(PaymentDetail, self).__init__(parent)
-        print(payment_detail)
         self.setFixedWidth(400)
         self.setFixedHeight(400)
         self.setWindowTitle("Note Details")
