@@ -1,0 +1,61 @@
+/* General setting for button and input */
+QPushButton#action_button{
+    padding:8px;
+    border-radius:0px;
+    background:rgb(14, 180, 166);
+    color:white;
+    font-weight:bold;
+
+}
+/* left hand side */
+QFrame#left_frame{
+    background:rgb(198, 228, 232);
+    background-image: url(../images/ba.png);
+    border:1px solid grey;
+    border-radius:0px
+}
+
+QPushButton#menu_button{
+    background:rgb(31, 214, 199, 0);
+    padding:10px;
+    border:none;
+    font-style:bolder;
+    font-size:20px;
+    text-align:left;
+    color:rgb(31, 214, 199);
+    font-family:Consolas Bold;
+}
+QPushButton#menu_button:hover{
+    background:red;
+    color:white;
+    }
+
+QPushButton#submit{
+    background:rgb(31, 214, 199);
+    padding:10px;
+    border:none;
+    font-style:bolder;
+    font-size:20px;
+}
+
+QPushButton#submit:hover{
+    background:rgb(37, 224, 209);
+}
+QLineEdit#entry{
+    padding:3px;font-size:15px;
+    color:gray;margin-top:10px;
+    border-radius:1px;border:1px solid grey;
+    }
+
+QComboxBox#entry{
+    padding:3px;font-size:15px;
+    color:gray;margin-top:10px;
+    border-radius:1px;border:1px solid grey;
+    }
+
+/* right hand side */
+QFrame#add_student_frame{
+    background:white;
+    margin:0px;
+    padding-left:10px
+}
