@@ -6,10 +6,21 @@ class DatabaseUtility:
         self.database_handle = database.DatabaseOps()
         self.encrypt_handle = encryptor.Encryptor()
 
-    def insert_login(self, username, password):
-        statement = """INSERT INTO User ('username', 'password') VALUES (?, ?)"""
-        values = (username, password)
-        self.database_handle.insert_record(statement, values)
+    def insert_user_login(self, username, password, question, answer):
+        statement = """INSERT INTO User ('username', 'password', 'question', 'answer') VALUES (?, ?,?,?)"""
+        values = (username, password, question, answer)
+        return self.database_handle.insert_record(statement, values)
+
+    def login(self, username, password):
+        sql_statement = f"""SELECT pk, username, password FROM User WHERE username='{username}'"""
+        user = self.database_handle.fetch_record(sql_statement).fetchone()
+        if not user:
+            return 0  # return zero if user not found
+        else:  # if user exist, check if password matches
+            if password == user[2]:  # compare the given and saved password
+                return [user[0], user[1]]  # return username and id
+            else:
+                return 0  # return zero if not the same
 
     def insert_password(self, sitename, username, password, owner):
         password = self.encrypt_handle.encrypt(password)
@@ -91,8 +102,7 @@ class DatabaseUtility:
                         UPDATE Login SET ('sitename', 'password', 'password') 
                         = (?, ?, ?) WHERE owner=? AND pk=?
                         """
-            parameter = (sitename,username, password, owner, pk)
-
+            parameter = (sitename, username, password, owner, pk)
 
         else:
             sql_statement = f"""
@@ -100,4 +110,3 @@ class DatabaseUtility:
                         """
             parameter = (sitename, password, owner)
         self.database_handle.update_record(sql_statement, parameter)
-
