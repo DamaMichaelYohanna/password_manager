@@ -3,9 +3,10 @@ from PySide6 import QtWidgets as widget
 from PySide6 import QtGui, QtCore
 from PySide6.QtWidgets import QMainWindow, QStackedWidget
 
-from backend import database
+from backend import database, database_utils
 from frontend import draw_line
 from frontend.dashboard import MainMenu
+from frontend.register import Register
 
 
 class MainApp(QMainWindow):
@@ -34,6 +35,7 @@ class LoginPage(widget.QWidget):
     def __init__(self, parent):
         super(LoginPage, self).__init__()
         self.parent = parent
+        self.database_util = database_utils.DatabaseUtility()
         main_layout = widget.QVBoxLayout(self)  # main layout
 
         image = QtGui.QPixmap("../images/lock.jfif") # load image
@@ -63,6 +65,7 @@ class LoginPage(widget.QWidget):
         forgot_pass = widget.QPushButton("Recover Password")
         forgot_pass.setObjectName("little")
         register = widget.QPushButton("Register Here")
+        register.clicked.connect(self.register_btn_callback)
         register.setObjectName('little')
         sub_layout.addWidget(forgot_pass)
         sub_layout.addWidget(register)
@@ -103,16 +106,19 @@ class LoginPage(widget.QWidget):
         if not username or not password:
             widget.QMessageBox.warning(self, "Error", "Fields can't be empty")
         else:
-            id = database.DatabaseOps().login(username, password)
-            if id:
-                widget.QMessageBox.information(self, "Success", f"Login Successful, {id[1]}")
-                self.parent.central_widget.addWidget(MainMenu(id))
+            user = self.database_util.login(username, password)
+            if user:
+                print(user)
+                widget.QMessageBox.information(self, "Success", f"Login Successful, {user[1]}")
+                self.parent.central_widget.addWidget(MainMenu(user))
                 self.parent.central_widget.setCurrentIndex(1)
 
             else:
                 widget.QMessageBox.warning(self, "Error", "Incorrect Login Details. Try Again!")
-            print(id)
 
+    def register_btn_callback(self):
+        app = Register(self, self.database_util)
+        app.open()
 
 win = widget.QApplication(sys.argv)
 my_app = MainApp()
