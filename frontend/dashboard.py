@@ -10,7 +10,7 @@ import payment
 import note
 
 from backend.database_utils import DatabaseUtility
-from frontend import password_gen
+from frontend import password_gen, password_test
 
 
 class MainMenu(widget.QWidget):
@@ -30,13 +30,20 @@ class MainMenu(widget.QWidget):
         note_window = note.NoteList(self.database_utility, user)
         scroll_area.setWidget(note_window)
         self.right_window_holder = widget.QStackedWidget()
-        self.right_window_holder.addWidget(password.PasswordList(self.database_utility, user))
+        self.right_window_holder.addWidget(
+            password.PasswordList(self.database_utility, user)
+        )
         self.right_window_holder.addWidget(
             payment.PaymentInfo(self.database_utility, user)
         )
-        self.right_window_holder.addWidget(scroll_area)
+        self.right_window_holder.addWidget(
+            scroll_area
+        )
         self.right_window_holder.addWidget(
             password_gen.PasswordGenerator(self.database_utility, user)
+        )
+        self.right_window_holder.addWidget(
+            password_test.PasswordTester()
         )
         # self.right_window_holder.addWidget(result_menu.Result(self.database_handle))
         self.right_window_holder.setCurrentIndex(0)
