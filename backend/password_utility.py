@@ -18,81 +18,73 @@ class PasswordManager:
             # and add it to the password string
             password += big_string[random.randint(0, len(big_string) - 1)]
         return password  # return the password
+
     #
-    # def __main_password_saver(self, site_name, username, password, encrypted, owner):
-    #     """private method to call the database handle and save new password"""
-    #     self.db_handle.save_record(site_name, username, password, encrypted, owner)
-    #
-    # def __main_single_password_retriever(self, site_name, user_id):
-    #     """
-    #     private method to call the db handle
-    #     and get one record from database.
-    #     Requires a site name to perform query
-    #      """
-    #     return self.db_handle.get_single_record(site_name, user_id=user_id)
-    #
-    # def __main_all_password_retriever(self, user_id):
-    #     """private method to call db handle and retrieve all the db entries"""
-    #     return self.db_handle.retrieve_all_records(user_id=user_id)
 
     def return_generated_password(self):
         """public method to return the generated password"""
         # call the private password generator and return it return value.
         return self.__main_password_generator()
-    #
-    # def save_new_password(self, site_name, username, password, owner, encrypt=True, ):
-    #     """call the private save password
-    #     method and passing the received inputs
-    #     """
-    #     if encrypt:
-    #         # call the encryptor call and encrypt the password
-    #         password = Encryptor().encrypt(password)
-    #         encrypted = 'true'  # set encrypt flag to string true
-    #     else:
-    #         encrypted = 'false'  # set encrypt flat to string false if not encrypted
-    #     self.__main_password_saver(site_name, username, password, encrypted, owner)
-    #     return None
-    #
-    # def retrieve_single_password(self, site_name, user_id):
-    #     result = self.__main_single_password_retriever(site_name=site_name,
-    #                                                    user_id=user_id)
-    #     result = list(result)
-    #     if result[4] == 'true':
-    #         # call the decryptor  and decrypt the password
-    #         result[3] = Encryptor().decrypt(result[3])
-    #     else:
-    #         pass  # pass if password was not encrypted
-    #     return result
-    #
-    # def retrieve_all_password(self, user_id):
-    #     """public method to call the private method for retrieving all password"""
-    #     # get all records and convert it to list, then decrypt the encrypted
-    #     # passwords before sending to the front end.
-    #     results = self.__main_all_password_retriever(user_id=user_id)
-    #     arrange_list = []
-    #     for result in results:  # use for loop to transverse the password
-    #         # convert to list because tuple don't allow assignment
-    #         result = list(result)
-    #         if result[4] == 'true':
-    #             # call the decryptor  and decrypt the password
-    #             result[3] = Encryptor().decrypt(result[3])
-    #             arrange_list.append(result)
-    #         # if not encrypted before, just pass
-    #     return arrange_list
-    #
-    # def delete_single_record(self, pk):
-    #     """call the db class delete function passing it the records pk"""
-    #     return self.db_handle.delete_single_record(pk)
-    #
-    # def delete_all_records(self):
-    #     """call the db class drop table function to clear records"""
-    #     return self.db_handle.drop_table()
-    #
-    # def update_password(self, pk, site_name, username, password, encrypt, owner):
-    #     if encrypt:  # if the user ticks the encrypt check button
-    #         # call the encryptor class and encrypt the password
-    #         password = Encryptor().encrypt(password)
-    #         encrypted: str = 'true'  # set encrypted flag to string true
-    #     else:
-    #         encrypted = 'false'  # set encrypted flat to string false if not encrypted
-    #     self.db_handle.update_record(pk, site_name, username, password, encrypted, owner)
+
+    def password_strength_check(self, password: str):
+        lower, upper, char, digit = 0, 0, 0, 0
+        capital_alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        small_alphabets = "abcdefghijklmnopqrstuvwxyz"
+        special_char = '!"#$%&()*+,-./:;<=>@[]_|'
+        digits = "0123456789"
+        if not password:
+            return 0
+
+        elif len(password) <= 5:
+            return 1
+
+        elif len(password) > 5 and password.isdigit() or password.isalpha() or password.islower() or password.isupper():
+            print("from here")
+            return 2
+        elif len(password) > 5 and password.isdigit() or password.isalnum():
+            return 3
+        if len(password) >= 8:
+            for value in password:
+
+                # counting lowercase alphabets
+                if value in small_alphabets:
+                    lower += 1
+
+                # counting uppercase alphabets
+                elif value in capital_alphabets:
+                    upper += 1
+
+                # counting digits
+                elif value in digits:
+                    digit += 1
+
+                # counting the mentioned special characters
+                elif value in special_char:
+                    char += 1
+
+            if (lower >= 1 and upper >= 1 and
+                    char >= 1 and digit >= 1):
+                return 10
+
+            if (lower <= 1 and upper <= 1 and
+                    char >= 1 and digit >= 1):
+                return 9
+
+            if (lower >= 1 and upper >= 1 and
+                    char == 1 and digit == 1):
+                return 8
+
+            if (lower >= 1 and upper >= 1 and
+                    char == 1 and digit == 0):
+                return 4.5
+
+            if (lower >= 1 and upper >= 1 and
+                    char == 0 and digit == 1):
+                return 4.5
+
+            if (lower >= 1 and upper >= 1 and
+                    char == 1 or char > 1 and digit == 1):
+                return 7
+
+
+
