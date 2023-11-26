@@ -187,11 +187,11 @@ class MainMenu(widget.QWidget):
             self.test_password.setStyleSheet(self.style_active)
 
 
-with open("style.qss") as file:
-    style = file.read()
-#
-win = widget.QApplication(sys.argv)
-my_app = MainMenu()
-my_app.show()
-win.setStyleSheet(style)
-win.exec()
+# with open("style.qss") as file:
+#     style = file.read()
+# #
+# win = widget.QApplication(sys.argv)
+# my_app = MainMenu()
+# my_app.show()
+# win.setStyleSheet(style)
+# win.exec()
