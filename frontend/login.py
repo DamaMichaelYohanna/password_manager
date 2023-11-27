@@ -13,7 +13,7 @@ class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Password Warehouse")
-        self.setWindowIcon(QtGui.QIcon("images/icon.png"))
+        self.setWindowIcon(QtGui.QIcon("../images/icon.png"))
         self.setFixedSize(800, 550)
         self.setStyleSheet("QMainWindow{background:white;}")
         self.init_ui()
