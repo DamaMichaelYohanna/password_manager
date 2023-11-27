@@ -1,7 +1,9 @@
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import (QMessageBox, QHBoxLayout, QPushButton,
-                               QLineEdit, QVBoxLayout, QDialog, QComboBox)
+                               QLineEdit, QVBoxLayout, QDialog, QComboBox, QLabel)
 
 from backend.database_utils import DatabaseUtility
+from backend.password_utility import PasswordManager
 
 
 class Register(QDialog):
@@ -10,6 +12,8 @@ class Register(QDialog):
     def __init__(self, parent, database_util):
         super(Register, self).__init__(parent)
         self.database_util: DatabaseUtility = database_util
+        self.password_utility = PasswordManager()
+        self.timer = QTimer(self)
         self.setFixedWidth(420)
         self.setWindowTitle("Registration section")
         self.setStyleSheet("QDialog{background:white;}")
@@ -22,10 +26,12 @@ class Register(QDialog):
                                     "font-size:18px;padding:4px;margin:10px 0px;}")
 
         self.password = QLineEdit()
-        self.password.setPlaceholderText("Enter your password. Password has to be secure.")
+        self.password.setPlaceholderText("Enter your password. ")
         self.password.setObjectName('entry')
         self.password.setStyleSheet("QLineEdit{color:rgba(41, 128, 140,1);"
                                     "font-size:18px;padding:4px;margin:10px 0px;}")
+        self.hidden_label = QLabel()
+        self.hidden_label.hide()
         self.security_question = QComboBox()
         self.security_question.setPlaceholderText("Select Security Question")
         security_question_list = ["What city were you born in?",
@@ -52,6 +58,7 @@ class Register(QDialog):
         stat_frame = QHBoxLayout()
         layout.addWidget(self.username)
         layout.addWidget(self.password)
+        layout.addWidget(self.hidden_label)
         layout.addWidget(self.security_question)
         layout.addWidget(self.security_answer)
         # layout.addWidget(self.sitename)
@@ -66,12 +73,24 @@ class Register(QDialog):
         security_question: str = self.security_question.currentText()
         security_answer: str = self.security_answer.text()
         if username and password and security_answer:
-            if not self.database_util.insert_user_login(
-                    username, password, security_question, security_answer
-            ):
-                QMessageBox.information(self, 'Success', "Account Created Successfully")
+            password_strength = self.password_utility.password_strength_check(password)
+            if password_strength > 5:
+                if not self.database_util.insert_user_login(
+                        username, password, security_question, security_answer
+                ):
+                    QMessageBox.information(self, 'Success', "Account Created Successfully")
+                else:
+                    QMessageBox.warning(self, 'Error Occurred', "Username already exist")
             else:
-                QMessageBox.warning(self, 'Error Occurred', "Username already exist")
+                self.hidden_label.show()
+                self.hidden_label.setText("Weak Password")
+                self.hidden_label.setStyleSheet("color:red;")
+                # Connect the timeout signal to the function that hides the label
+                self.timer.timeout.connect(self.hide_label)
+                self.timer.start(2000)
 
         else:
             QMessageBox.warning(self, 'Error Occurred', "Fields can not be empty")
+
+    def hide_label(self):
+        self.hidden_label.hide()
