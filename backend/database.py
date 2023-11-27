@@ -16,9 +16,9 @@ class DatabaseOps:
         sql_list = [
 
             "CREATE TABLE IF NOT EXISTS User (pk INTEGER PRIMARY KEY, username VARCHAR UNIQUE, password VARCHAR, question VARCHAR, answer VARCHAR)",
-            "CREATE TABLE IF NOT EXISTS Login (pk INTEGER PRIMARY KEY, sitename CHAR, username CHAR, password CHAR, owner INTEGER)",
-            "CREATE TABLE IF NOT EXISTS Payments  (pk INTEGER PRIMARY KEY, bank CHAR, pin CHAR, number CHAR, owner INTEGER)",
-            'CREATE TABLE IF NOT EXISTS Notes  (pk INTEGER PRIMARY KEY, title CHAR, content CHAR, owner INTEGER)',
+            "CREATE TABLE IF NOT EXISTS Login (pk INTEGER PRIMARY KEY, sitename CHAR, username CHAR, password CHAR, owner INTEGER, date timestamp)",
+            "CREATE TABLE IF NOT EXISTS Payments  (pk INTEGER PRIMARY KEY, bank CHAR, pin CHAR, number CHAR, owner INTEGER, date timestamp)",
+            'CREATE TABLE IF NOT EXISTS Notes  (pk INTEGER PRIMARY KEY, title CHAR, content CHAR, owner INTEGER, date timestamp)',
 
         ]
         for sql in sql_list:
