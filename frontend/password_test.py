@@ -1,8 +1,7 @@
 from PySide6 import QtCore
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QPushButton, QLabel, \
-    QLineEdit, QComboBox, QFrame, QVBoxLayout, QHBoxLayout, \
-    QMessageBox, QSlider, QProgressBar
+    QLineEdit, QFrame, QVBoxLayout, QProgressBar
 
 from backend.password_utility import PasswordManager
 from draw_line import QHSeparationLine, QVSeparationLine
@@ -25,8 +24,20 @@ class PasswordTester(QFrame):
         descr.setStyleSheet("QLabel{font-size:18px; color:white;"
                             "background:rgba(41, 128, 140,1);padding:10px;}"
                             "font-weight:bold;")
+        extra_heading = QLabel("Below are point to note regard password strength")
+        extra_heading.setStyleSheet("QLabel{font-size:16px}")
+
+        extra_info = QLabel(
+                            "1. Password should be made up of mixed letter, upper and lower\n"
+                            "2. Password should contain at least a digit\n"
+                            "3. Password should also contain at least a special Character\n"
+                            "4. Password length should be at least eight(8) character")
+        extra_info.setStyleSheet("QLabel{padding:5px;font-size:16px;}")
 
         self.main_layout.addWidget(descr)
+        self.main_layout.addWidget(extra_heading)
+        self.main_layout.addWidget(QHSeparationLine())
+        self.main_layout.addWidget(extra_info)
         self.main_layout.addWidget(image_label)
 
         self.password_label = QLineEdit()
@@ -36,6 +47,7 @@ class PasswordTester(QFrame):
         self.password_label.setStyleSheet("QLineEdit{font-size:18px;"
                                           "padding:5px;color:rgba(41, 128, 140,1);"
                                           "border:none;}")
+
         self.progress = QProgressBar(self)
         self.progress.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.progress.setMinimum(0)
