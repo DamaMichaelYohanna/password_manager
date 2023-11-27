@@ -91,7 +91,7 @@ class MainMenu(widget.QWidget):
         # label.setPixmap(QtGui.QPixmap("images/retouch.pngg").scaled(100, 100))
         label.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.logins = widget.QPushButton(text="Logins")
+        self.logins = widget.QPushButton(text="Passwords")
         self.logins.clicked.connect(lambda: self.switch_page1(0))
         self.logins.setObjectName("menu_button")
         self.logins.setFixedWidth(220)
