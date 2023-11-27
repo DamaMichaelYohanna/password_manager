@@ -1,12 +1,11 @@
+import pyperclip
 from PySide6 import QtCore
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QIcon
 from PySide6.QtWidgets import QPushButton, QLabel, \
-    QLineEdit, QComboBox, QFrame, QVBoxLayout, QHBoxLayout, \
-    QHeaderView, QTableWidget, QTableWidgetItem, QMessageBox, QDialog, QCheckBox, QGridLayout, QPlainTextEdit, \
-    QScrollArea
+    QLineEdit, QFrame, QVBoxLayout, QHBoxLayout, QMessageBox
 
 from backend import password_utility
-from draw_line import QHSeparationLine, QVSeparationLine
+from draw_line import QHSeparationLine
 from frontend.password import NewOrUpdatePassword
 
 
@@ -32,13 +31,24 @@ class PasswordGenerator(QFrame):
 
         self.main_layout.addWidget(descr)
         self.main_layout.addWidget(image_label)
+
         self.password_label = QLineEdit()
         self.password_label.setPlaceholderText("Your Password will Appear here")
         self.password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.password_label.setStyleSheet("QLineEdit{font-size:18px;"
                                           "padding:5px;color:rgba(41, 128, 140,1);"
                                           "border:none;}")
-        action_btn_frame = QHBoxLayout()
+        copy_btn = QPushButton()
+        copy_icon = QIcon("../images/copy.png")
+        copy_btn.setIcon(copy_icon)
+        copy_btn.setToolTip("Copy Password")
+        copy_btn.clicked.connect(self.copy_btn_callback)
+        # create layout for password area and copy button
+        password_label_frame = QHBoxLayout()
+        password_label_frame.addWidget(self.password_label)
+        password_label_frame.addWidget(copy_btn)
+
+        action_btn_frame = QHBoxLayout() # create layout for generate and save btn
         self.generate_btn = QPushButton("Generate Password")
         self.generate_btn.setStyleSheet("padding:8px;border-radius:3px;"
                                         "background:white;font-weight:bold;"
@@ -64,7 +74,7 @@ class PasswordGenerator(QFrame):
         #                           "font-weight:bold;border:1px solid rgba(41, 128, 140,1);")
 
         self.main_layout.addStretch()
-        self.main_layout.addWidget(self.password_label)
+        self.main_layout.addLayout(password_label_frame)
         self.main_layout.addWidget(QHSeparationLine())
         self.main_layout.addLayout(action_btn_frame)
         self.main_layout.addStretch()
@@ -85,4 +95,11 @@ class PasswordGenerator(QFrame):
             self.generated_password = None
         else:
             QMessageBox.information(self,"Information", "No password generated")
+
+    def copy_btn_callback(self):
+        if self.generated_password:
+            pyperclip.copy(self.generated_password)
+            QMessageBox.information(self, "Success", "Password has been copied to clipboard")
+
+
 
