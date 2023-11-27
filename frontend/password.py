@@ -204,27 +204,27 @@ class NewOrUpdatePassword(QDialog):
         self.username.setPlaceholderText("Enter Username")
         self.username.setObjectName('entry')
         self.username.setStyleSheet("QLineEdit{color:rgba(41, 128, 140,1);"
-                                     "font-size:18px;padding:4px;margin:10px 0px;}")
+                                    "font-size:18px;padding:4px;margin:10px 0px;}")
 
         self.password = QLineEdit()
         self.password.setPlaceholderText("Enter Password")
         self.password.setObjectName('entry')
         self.password.setStyleSheet("QLineEdit{color:rgba(41, 128, 140,1);"
-                                     "font-size:18px;padding:4px;margin:10px 0px;}")
+                                    "font-size:18px;padding:4px;margin:10px 0px;}")
         if site_name and username and password:
             self.sitename.setText(site_name)
             self.username.setText(username)
             self.password.setText(password)
 
-            submit_btn = QPushButton("Update Login")
+            submit_btn = QPushButton("Update Password")
             submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(True))
 
         elif password:
             self.password.setText(password)
-            submit_btn = QPushButton("Add Login")
+            submit_btn = QPushButton("Add Password")
             submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(False))
         else:
-            submit_btn = QPushButton("Add Login")
+            submit_btn = QPushButton("Add Password")
             submit_btn.clicked.connect(lambda: self.add_or_update_password_callback(False))
 
         submit_btn.setObjectName("Add Login")
@@ -245,17 +245,16 @@ class NewOrUpdatePassword(QDialog):
         site_name = self.sitename.text()
         username = self.username.text()
         password = self.password.text()
-        print(update)
         if site_name and username and password:
             if update:
                 self.database_util.update_password(site_name, password,
                                                    owner=self.user[0],
                                                    username=username,
                                                    pk=self.login_pk)
-                QMessageBox.information(self, 'Success', "Logins Updated successfully")
+                QMessageBox.information(self, 'Success', "Password Updated successfully")
             else:
                 self.database_util.insert_password(site_name, username, password, owner=self.user[0])
-                QMessageBox.information(self, 'Success', "Logins Added successfully")
+                QMessageBox.information(self, 'Success', "Password Added successfully")
 
         else:
             QMessageBox.warning(self, 'Error Occurred', "All fields most be filled!")
