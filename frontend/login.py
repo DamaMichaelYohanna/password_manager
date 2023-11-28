@@ -108,7 +108,6 @@ class LoginPage(widget.QWidget):
         else:
             user = self.database_util.login(username, password)
             if user:
-                print(user)
                 widget.QMessageBox.information(self, "Success", f"Login Successful, {user[1]}")
                 self.parent.central_widget.addWidget(MainMenu(user))
                 self.parent.central_widget.setCurrentIndex(1)
