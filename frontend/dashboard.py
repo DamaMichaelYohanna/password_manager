@@ -1,21 +1,23 @@
 import sys
 from PySide6 import QtWidgets as widget
 from PySide6 import QtGui, QtCore
-from PySide6.QtWidgets import QScrollArea
+from PySide6.QtWidgets import QScrollArea, QMessageBox
 
 # user import
 import draw_line
 import password
 import payment
 import note
+import watch_video
 
 from backend.database_utils import DatabaseUtility
+from backend.password_utility import PasswordManager
 from frontend import password_gen, password_test
 
 
 class MainMenu(widget.QWidget):
 
-    def __init__(self, user=[1, 'Dama']):
+    def __init__(self, user):
         super(MainMenu, self).__init__()
         self.setWindowTitle("Main Menu")
         self.setWindowIcon(QtGui.QIcon("../images/icon.png"))
@@ -24,6 +26,7 @@ class MainMenu(widget.QWidget):
         self.user = user
         # create DB instance and pass to different pages
         self.database_utility = DatabaseUtility()
+        self.password_utility = PasswordManager()
         # create instance of other window and arrange in stack
         scroll_area = QScrollArea()
         scroll_area.setStyleSheet("QScrollArea{background:white;}")
@@ -44,6 +47,10 @@ class MainMenu(widget.QWidget):
         )
         self.right_window_holder.addWidget(
             password_test.PasswordTester()
+        )
+
+        self.right_window_holder.addWidget(
+            watch_video.VideoPlayer()
         )
         # self.right_window_holder.addWidget(result_menu.Result(self.database_handle))
         self.right_window_holder.setCurrentIndex(0)
@@ -113,9 +120,9 @@ class MainMenu(widget.QWidget):
         self.test_password.clicked.connect(lambda: self.switch_page1(4))
         self.test_password.setObjectName("menu_button")
 
-        # self.test_pass = widget.QPushButton(text="Test Password Strength")
-        # self.test_pass.clicked.connect(lambda: self.switch_page1(4))
-        # self.test_pass.setObjectName("menu_button")
+        self.watch_vid = widget.QPushButton(text="Educational Content")
+        self.watch_vid.clicked.connect(lambda: self.switch_page1(5))
+        self.watch_vid.setObjectName("menu_button")
 
 
         add_record = widget.QPushButton(text="-> General Settings")
@@ -131,6 +138,8 @@ class MainMenu(widget.QWidget):
         left_side.addWidget(draw_line.QHSeparationLine())
         left_side.addWidget(self.generate_pass)
         left_side.addWidget(self.test_password)
+        left_side.addWidget(draw_line.QHSeparationLine())
+        left_side.addWidget(self.watch_vid)
         left_side.addStretch()
         # left_side.addWidget(view_record)
         # left_side.addStretch()
@@ -145,6 +154,11 @@ class MainMenu(widget.QWidget):
         body_layout.addWidget(right_side)
         # body_layout.addStretch()
         self.update_selection(0)
+        expire_password = self.password_utility.check_password_timeline(self.user[0])
+        if expire_password:
+            QMessageBox.warning(self, "Over due passwords", "The Password for the following Sites are overdue"
+                                                            f"{expire_password}")
+
         self.setLayout(body_layout)
 
     def switch_page1(self, value):
@@ -187,11 +201,4 @@ class MainMenu(widget.QWidget):
             self.test_password.setStyleSheet(self.style_active)
 
 
-# with open("style.qss") as file:
-#     style = file.read()
-# #
-# win = widget.QApplication(sys.argv)
-# my_app = MainMenu()
-# my_app.show()
-# win.setStyleSheet(style)
-# win.exec()
+
