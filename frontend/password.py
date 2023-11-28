@@ -62,7 +62,7 @@ class PasswordList(QFrame):
 
                 self.password_layout.addWidget(note_title, index + 2, 0)
 
-                self.password_layout.addWidget(QLabel("Two Days Ago"), index + 2, 1)
+                self.password_layout.addWidget(QLabel(f'{logins[5]}'), index + 2, 1)
                 self.view_button = QPushButton(f"view")
                 self.view_button.setStyleSheet("background:white;color:rgba(41, 128, 140,1);"
                                                "font-weight:bold;border:1px solid rgba(41, 128, 140,1);"
@@ -253,8 +253,31 @@ class NewOrUpdatePassword(QDialog):
                                                    pk=self.login_pk)
                 QMessageBox.information(self, 'Success', "Password Updated successfully")
             else:
-                self.database_util.insert_password(site_name, username, password, owner=self.user[0])
-                QMessageBox.information(self, 'Success', "Password Added successfully")
+                print("here we are going down")
+                saved_password = self.database_util.fetch_password_only("Login", self.user[0]).fetchall()
+                encrypted_password = encryptor.Encryptor().encrypt(password)
+                print(saved_password, encrypted_password)
+                print(encrypted_password in saved_password)
+                password_exist = False
+                for passwords in saved_password:
+                    if encrypted_password in passwords:
+                        password_exist = True
+
+                if password_exist:
+                    return_value = QMessageBox.question(
+                        self,
+                        "Password Repeat",
+                        "This password is already in use by you. Proceed to save?",
+                        buttons=QMessageBox.Yes | QMessageBox.No,
+                        defaultButton= QMessageBox.No
+                    )
+                    if return_value == QMessageBox.Yes:
+                        self.database_util.insert_password(site_name, username, password, owner=self.user[0])
+                        QMessageBox.information(self, 'Success', "Password Added successfully")
+                else:
+                    self.database_util.insert_password(site_name, username, password, owner=self.user[0])
+                    QMessageBox.information(self, 'Success', "Password Added successfully")
+
 
         else:
             QMessageBox.warning(self, 'Error Occurred', "All fields most be filled!")
