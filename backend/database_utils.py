@@ -76,6 +76,10 @@ class DatabaseUtility:
         return_values = self.database_handle.fetch_record(statement)
         return return_values
 
+    def fetch_password_only(self, table, owner):
+        statement = f"""SELECT password FROM {table} WHERE owner={owner}"""
+        return_values = self.database_handle.fetch_record(statement)
+        return return_values
     # ---------------------------------------------------------------------------------------
     # delete section for our database utilities
     def delete_record(self, table, pk, owner):
